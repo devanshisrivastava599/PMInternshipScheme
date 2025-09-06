@@ -428,7 +428,7 @@ document.head.appendChild(style);
 // ================================
 function initializeAuth() {
     const SUPABASE_URL = 'https://ntmbdrdlqwxhwcibzsed.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50bWJkcmRscXd4aHdjaWJ6c2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwNzg3MjgsImV4cCI6MjA3MjY1NDcyOH0.jTCPll1xdX5EkWNnZlSqhi7B6a2rOwiOkLd9zWm';
 
     const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -536,3 +536,4 @@ function initializeAuth() {
 
     handleAuthChange();
 }
+
