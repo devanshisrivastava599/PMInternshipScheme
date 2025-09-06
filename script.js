@@ -385,6 +385,11 @@ function addMessageToHistory(message, sender) {
 function scrollToInternships() {
     document.getElementById('internships').scrollIntoView({ behavior: 'smooth' });
 }
+//sroll to learn more
+function scrollToLearnMore() {
+    document.getElementById('learn-more').scrollIntoView({ behavior: 'smooth' });
+}
+
 
 // Application modal functions
 function openApplicationModal(internshipTitle) {
