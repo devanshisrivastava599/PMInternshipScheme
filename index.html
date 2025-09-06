@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+     
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Internship AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B35',
+                        secondary: '#262730',
+                        accent: '#F0F2F6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .streamlit-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+ <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary text-gray-900 dark:text-white min-h-screen">
+    <!-- Header -->
+    <header style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="streamlit-container">
+            <nav class="flex items-center justify-between py-4">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-graduation-cap text-2xl text-primary"></i>
+                    <span class="text-xl font-semibold" data-en="PM Internship AI" data-hi="पीएम इंटर्नशिप एआई">PM Internship AI</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" data-en="Home" data-hi="होम">Home</a>
+                    <a href="#about" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" data-en="About" data-hi="के बारे में">About</a>
+                    <a href="#internships" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" data-en="Internships" data-hi="इंटर्नशिप">Internships</a>
+                    <a href="#contact" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" data-en="Contact" data-hi="संपर्क">Contact</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <select id="languageToggle" class="bg-accent dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-1 text-sm">
+                        <option value="en">EN</option>
+                        <option value="hi">हि</option>
+                    </select>
+                    
+                    <button id="darkModeToggle" class="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden text-gray-600"></i>
+                        <i class="fas fa-sun hidden dark:block text-gray-300"></i>
+                    </button>
+                     <!-- Login/Logout button -->
+                    <button id="auth-button" class="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                        <span id="auth-button-text">Login</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Banner Section -->
+    <section id="home" class="relative text-gray-800 overflow-hidden" style="background: linear-gradient(135deg, #f5f5dc 0%, #fff5f0 50%, #ffede0 100%);">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/20 to-transparent"></div>
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full"></div>
+        </div>
+        
+        <div class="streamlit-container relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center min-h-[500px] py-16">
+                <!-- Left Content -->
+                <div class="text-left">
+                    <div class="mb-6">
+                        <span class="inline-block bg-primary px-4 py-2 rounded-full text-sm font-medium mb-4" data-en="Government of India Initiative" data-hi="भारत सरकार की पहल">Government of India Initiative</span>
+                        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6" data-en="Prime Minister Internship Scheme" data-hi="प्रधानमंत्री इंटर्नशिप योजना">Prime Minister<br><span class="text-primary">Internship Scheme</span></h1>
+                        <p class="text-xl text-gray-600 mb-8 leading-relaxed" data-en="Empowering India's youth with real-world experience in top companies. Get hands-on training, monthly stipend, and build your career with government support." data-hi="शीर्ष कंपनियों में वास्तविक अनुभव के साथ भारत के युवाओं को सशक्त बनाना। व्यावहारिक प्रशिक्षण, मासिक वृत्तिका प्राप्त करें और सरकारी सहायता से अपना करियर बनाएं।">Empowering India's youth with real-world experience in top companies. Get hands-on training, monthly stipend, and build your career with government support.</p>
+                    </div>
+                    
+                    <!-- Key Stats -->
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange">12</div>
+                            <div class="text-sm text-gray-500" data-en="Months" data-hi="महीने">Months</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange">₹5000</div>
+                            <div class="text-sm text-gray-500" data-en="Monthly" data-hi="मासिक">Monthly</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange">500+</div>
+                            <div class="text-sm text-gray-500" data-en="Companies" data-hi="कंपनियां">Companies</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="scrollToInternships()" class="bg-primary text-white hover:bg-primary/90 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg" data-en="Apply Now" data-hi="अभी आवेदन करें">Apply Now</button>
+                        <button class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 rounded-lg font-semibold text-lg transition-colors" data-en="Learn More" data-hi="और जानें">Learn More</button>
+                    </div>
+                </div>
+                
+                <!-- Right Visual -->
+                <div class="hidden lg:flex justify-center items-center">
+                    <div class="relative">
+                        <!-- Main Illustration -->
+                        <div class="w-96 h-96 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <div class="w-80 h-80 bg-gradient-to-br from-white/20 to-orange-200/20 rounded-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <i class="fas fa-graduation-cap text-primary text-3xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold mb-2" data-en="Ready for your first job?" data-hi="अपनी पहली नौकरी के लिए तैयार?">Ready for your<br>first job?</h3>
+                                    <p class="text-orange-200" data-en="Join thousands of interns" data-hi="हजारों इंटर्न के साथ जुड़ें">Join thousands of interns</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating Elements -->
+                        <div class="absolute -top-4 -left-4 w-16 h-16 bg-white/30 rounded-full flex items-center justify-center">
+                            <i class="fas fa-briefcase text-primary"></i>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-chart-line text-white"></i>
+                        </div>
+                        <div class="absolute top-1/2 -right-8 w-12 h-12 bg-white/40 rounded-full flex items-center justify-center">
+                            <i class="fas fa-star text-primary text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Auth Form Section (initially hidden) -->
+        <section id="auth-section" class="py-16 hidden">
+            <div class="streamlit-container">
+                <div class="flex justify-center">
+                    <div class="card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+                        <h2 class="text-3xl font-bold text-center mb-6 text-primary" id="auth-title">Log In</h2>
+                        <form id="auth-form">
+                            <input type="email" id="email" placeholder="Email" required class="w-full px-4 py-3 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600">
+                            <input type="password" id="password" placeholder="Password" required class="w-full px-4 py-3 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600">
+                            <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-semibold py-3 rounded-md hover:bg-primary/90 transition-colors">Log In</button>
+                            <div id="message" class="text-center mt-4 text-red-500 font-bold"></div>
+                        </form>
+                        <div class="text-center mt-4">
+                            <a href="#" id="auth-switch" class="text-primary hover:underline">Don't have an account? Sign Up.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section for logged-in users (initially hidden) -->
+        <section id="dashboard-section" class="py-16 hidden">
+            <div class="streamlit-container">
+                <div class="flex justify-center">
+                    <div class="card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md text-center">
+                        <h2 class="text-3xl font-bold text-primary mb-4">Welcome, <span id="user-email"></span>!</h2>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">You are now logged in.</p>
+                        <button id="logout-btn" class="bg-red-500 text-white font-semibold py-3 px-6 rounded-md hover:bg-red-600 transition-colors">Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-accent dark:bg-gray-800">
+        <div class="streamlit-container">
+            <h2 class="text-3xl font-bold text-center mb-12" data-en="About PM Internship Scheme" data-hi="पीएम इंटर्नशिप योजना के बारे में">About PM Internship Scheme</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-users text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3" data-en="Eligibility" data-hi="पात्रता">Eligibility</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm" data-en="Graduate/Post-graduate students from recognized universities" data-hi="मान्यता प्राप्त विश्वविद्यालयों के स्नातक/स्नातकोत्तर छात्र">Graduate/Post-graduate students from recognized universities</p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-clock text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3" data-en="Duration" data-hi="अवधि">Duration</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm" data-en="3-12 months internship program" data-hi="3-12 महीने का इंटर्नशिप कार्यक्रम">3-12 months internship program</p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-rupee-sign text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3" data-en="Stipend" data-hi="वजीफा">Stipend</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm" data-en="₹5,000 - ₹25,000 per month" data-hi="₹5,000 - ₹25,000 प्रति माह">₹5,000 - ₹25,000 per month</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Eligibility & Benefits Section -->
+    <section class="py-16">
+        <div class="streamlit-container">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Eligibility Section -->
+                <div>
+                    <h2 class="text-3xl font-bold mb-8" data-en="Are you Eligible?" data-hi="क्या आप पात्र हैं?">Are you <span class="text-primary">Eligible?</span></h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-primary">21</span>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 text-primary" data-en="Age" data-hi="आयु">Age</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" data-en="21-24 Years" data-hi="21-24 वर्ष">21-24 Years</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-briefcase text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 text-primary" data-en="Job Status" data-hi="नौकरी की स्थिति">Job Status</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" data-en="Not Employed Full Time" data-hi="पूर्णकालिक रोजगार में नहीं">Not Employed Full Time</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-graduation-cap text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 text-primary" data-en="Education" data-hi="शिक्षा">Education</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" data-en="Not Enrolled Full Time" data-hi="पूर्णकालिक नामांकित नहीं">Not Enrolled Full Time</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-users text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 text-primary" data-en="Family Income" data-hi="पारिवारिक आय">Family Income</h3>
+                            <div class="text-xs text-gray-600 dark:text-gray-300">
+                                <p data-en="No one earning more than ₹8 Lakhs PA" data-hi="कोई भी ₹8 लाख प्रति वर्ष से अधिक नहीं कमा रहा">No one earning more than ₹8 Lakhs PA</p>
+                                <p data-en="No Member has a Govt. Job" data-hi="कोई सदस्य सरकारी नौकरी में नहीं">No Member has a Govt. Job</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Benefits Section -->
+                <div>
+                    <h2 class="text-3xl font-bold mb-8" data-en="Core Benefits for PM Internship Scheme" data-hi="पीएम इंटर्नशिप योजना के मुख्य लाभ">Core Benefits <span class="text-primary">for PM Internship Scheme</span></h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-building text-primary text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" data-en="12 months real-life experience in India's top companies" data-hi="भारत की शीर्ष कंपनियों में 12 महीने का वास्तविक अनुभव">12 months real-life experience in India's top companies</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-wallet text-primary text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" data-en="Monthly assistance of ₹4500 by Government of India and ₹500 by Industry" data-hi="भारत सरकार द्वारा ₹4500 और उद्योग द्वारा ₹500 मासिक सहायता">Monthly assistance of ₹4500 by Government of India and ₹500 by Industry</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-gift text-primary text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" data-en="One-time Grant of ₹6000 for incidentals" data-hi="आकस्मिक खर्चों के लिए ₹6000 का एकबारगी अनुदान">One-time Grant of ₹6000 for incidentals</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary p-6 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-compass text-primary text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" data-en="Select from Various Sectors and from top Companies of India" data-hi="विभिन्न क्षेत्रों और भारत की शीर्ष कंपनियों में से चुनें">Select from Various Sectors and from top Companies of India</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Internships Section -->
+    <section id="internships" class="py-16">
+        <div class="streamlit-container">
+            <h2 class="text-3xl font-bold text-center mb-12" data-en="Available Internships" data-hi="उपलब्ध इंटर्नशिप">Available Internships</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="internshipGrid">
+                <!-- Internship cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 main-gradient"></div>
+        
+        <!-- Floating Background Elements -->
+        <div class="absolute top-10 left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl animate-float"></div>
+        <div class="absolute bottom-20 right-20 w-40 h-40 bg-secondary/10 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-accent/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-6xl font-bold gradient-text mb-8" data-en="💬 Get In Touch" data-hi="💬 संपर्क में रहें">💬 Get In Touch</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8" data-en="Have questions about the PM Internship Scheme? We're here to help you succeed!" data-hi="पीएम इंटर्नशिप योजना के बारे में प्रश्न हैं? हम आपकी सफलता में मदद करने के लिए यहाँ हैं!">Have questions about the PM Internship Scheme? We're here to help you succeed!</p>
+                <div class="w-32 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <!-- Contact Form -->
+                <div class="bg-white/80 backdrop-blur-lg dark:bg-gray-800/80 p-10 rounded-3xl shadow-2xl border border-white/20">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-paper-plane text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white" data-en="Send us a Message" data-hi="हमें संदेश भेजें">Send us a Message</h3>
+                    </div>
+                    
+                    <form class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="relative group">
+                                <input type="text" placeholder="First Name" class="w-full p-4 bg-white/50 border-2 border-gray-200 rounded-2xl focus:border-primary focus:outline-none transition-all duration-300 dark:bg-gray-700/50 dark:border-gray-600 dark:text-white group-hover:shadow-lg">
+                                <i class="fas fa-user absolute right-4 top-4 text-primary opacity-60"></i>
+                            </div>
+                            <div class="relative group">
+                                <input type="text" placeholder="Last Name" class="w-full p-4 bg-white/50 border-2 border-gray-200 rounded-2xl focus:border-secondary focus:outline-none transition-all duration-300 dark:bg-gray-700/50 dark:border-gray-600 dark:text-white group-hover:shadow-lg">
+                                <i class="fas fa-user-tag absolute right-4 top-4 text-secondary opacity-60"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="relative group">
+                            <input type="email" placeholder="Email Address" class="w-full p-4 bg-white/50 border-2 border-gray-200 rounded-2xl focus:border-accent focus:outline-none transition-all duration-300 dark:bg-gray-700/50 dark:border-gray-600 dark:text-white group-hover:shadow-lg">
+                            <i class="fas fa-envelope absolute right-4 top-4 text-accent opacity-60"></i>
+                        </div>
+                        
+                        <div class="relative group">
+                            <input type="tel" placeholder="Phone Number" class="w-full p-4 bg-white/50 border-2 border-gray-200 rounded-2xl focus:border-primary focus:outline-none transition-all duration-300 dark:bg-gray-700/50 dark:border-gray-600 dark:text-white group-hover:shadow-lg">
+                            <i class="fas fa-phone absolute right-4 top-4 text-primary opacity-60"></i>
+                        </div>
+                        
+                        <div class="relative group">
+                            <select class="w-full p-4 bg-white/50 border-2 border-gray-200 rounded-2xl focus:border-secondary focus:outline-none transition-all duration-300 dark:bg-gray-700/50 dark:border-gray-600 dark:text-white group-hover:shadow-lg">
+                                <option>Select Inquiry Type</option>
+                                <option>Eligibility Questions</option>
+                                <option>Application Process</option>
+                                <option>Technical Support</option>
+                                <option>General Information</option>
+                            </select>
+                            <i class="fas fa-question-circle absolute right-4 top-4 text-secondary opacity-60"></i>
+                        </div>
+                        
+                        <div class="relative group">
+                            <textarea placeholder="Your Message" rows="4" class="w-full p-4 bg-white/50 border-2 border-gray-200 rounded-2xl focus:border-accent focus:outline-none transition-all duration-300 dark:bg-gray-700/50 dark:border-gray-600 dark:text-white group-hover:shadow-lg resize-none"></textarea>
+                            <i class="fas fa-comment-dots absolute right-4 top-4 text-accent opacity-60"></i>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary via-secondary to-accent text-white py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group">
+                            <span class="relative z-10" data-en="🚀 Send Message" data-hi="🚀 संदेश भेजें">🚀 Send Message</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-accent via-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="space-y-8">
+                    <!-- Contact Cards -->
+                    <div class="bg-white/80 backdrop-blur-lg dark:bg-gray-800/80 p-8 rounded-3xl shadow-2xl border border-white/20 card-hover">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-14 h-14 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800 dark:text-white" data-en="Visit Us" data-hi="हमसे मिलें">Visit Us</h4>
+                                <p class="text-gray-600 dark:text-gray-300" data-en="PM Internship Office" data-hi="पीएम इंटर्नशिप कार्यालय">PM Internship Office</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed" data-en="New Delhi, India 110001<br>South Block, Government of India" data-hi="नई दिल्ली, भारत 110001<br>साउथ ब्लॉक, भारत सरकार">New Delhi, India 110001<br>South Block, Government of India</p>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-lg dark:bg-gray-800/80 p-8 rounded-3xl shadow-2xl border border-white/20 card-hover">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-14 h-14 bg-gradient-to-r from-secondary to-accent rounded-full flex items-center justify-center">
+                                <i class="fas fa-phone text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800 dark:text-white" data-en="Call Us" data-hi="हमें कॉल करें">Call Us</h4>
+                                <p class="text-gray-600 dark:text-gray-300" data-en="24/7 Support Available" data-hi="24/7 सहायता उपलब्ध">24/7 Support Available</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">+91 11 2301 0000<br>+91 11 2301 0001</p>
+                    </div>
+                    
+                    <div class="bg-white/80 backdrop-blur-lg dark:bg-gray-800/80 p-8 rounded-3xl shadow-2xl border border-white/20 card-hover">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-14 h-14 bg-gradient-to-r from-accent to-primary rounded-full flex items-center justify-center">
+                                <i class="fas fa-envelope text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800 dark:text-white" data-en="Email Us" data-hi="हमें ईमेल करें">Email Us</h4>
+                                <p class="text-gray-600 dark:text-gray-300" data-en="Quick Response Guaranteed" data-hi="त्वरित प्रतिक्रिया की गारंटी">Quick Response Guaranteed</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">support@pminternship.gov.in<br>info@pminternship.gov.in</p>
+                    </div>
+                    
+                    <!-- Social Media -->
+                    <div class="bg-white/80 backdrop-blur-lg dark:bg-gray-800/80 p-8 rounded-3xl shadow-2xl border border-white/20">
+                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-6 text-center" data-en="Follow Us" data-hi="हमें फॉलो करें">Follow Us</h4>
+                        <div class="flex justify-center space-x-4">
+                            <a href="#" class="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-twitter text-white"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-gradient-to-r from-secondary to-accent rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-linkedin text-white"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-gradient-to-r from-accent to-primary rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-instagram text-white"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-youtube text-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p data-en="© 2024 PM Internship AI Assistant. All rights reserved." data-hi="© 2024 पीएम इंटर्नशिप एआई सहायक। सभी अधिकार सुरक्षित।">© 2024 PM Internship AI Assistant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <div id="chatbotFloat" class="fixed bottom-6 right-6 z-50">
+        <button onclick="toggleChatbot()" class="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition animate-pulse">
+            <i class="fas fa-robot text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Chatbot Modal -->
+    <div id="chatbotModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md h-96 flex flex-col">
+                <!-- Chat Header -->
+                <div class="bg-primary text-white p-4 rounded-t-lg flex justify-between items-center">
+                    <h3 data-en="AI Assistant" data-hi="एआई सहायक">AI Assistant</h3>
+                    <button onclick="toggleChatbot()" class="text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div id="chatMessages" class="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-700">
+                    <div class="bot-message mb-3">
+                        <div class="bg-white dark:bg-gray-600 p-3 rounded-lg shadow">
+                            <p class="text-sm" data-en="Hello! I'm your PM Internship AI Assistant. How can I help you today?" data-hi="नमस्ते! मैं आपका पीएम इंटर्नशिप एआई सहायक हूं। आज मैं आपकी कैसे मदद कर सकता हूं?">Hello! I'm your PM Internship AI Assistant. How can I help you today?</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="p-6 border-t-2 border-gradient-to-r from-saffron to-emerald dark:border-gray-600">
+                    <div class="flex space-x-3">
+                        <input type="text" id="chatInput" placeholder="Type your message... / अपना संदेश टाइप करें..." class="flex-1 p-4 border-2 border-gray-200 rounded-2xl focus:border-saffron focus:outline-none transition-colors dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                        <button onclick="startVoiceInput()" class="bg-gradient-to-r from-emerald to-green-600 text-white p-4 rounded-2xl hover:from-green-600 hover:to-emerald transition-all duration-300 shadow-lg">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button onclick="sendMessage()" class="bg-gradient-to-r from-saffron to-lightOrange text-white p-4 rounded-2xl hover:from-lightOrange hover:to-saffron transition-all duration-300 shadow-lg">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div id="applicationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div style="background: linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffede0 100%);" class="dark:bg-secondary rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                <!-- Application Header -->
+                <div class="bg-primary text-white p-6 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-semibold" id="applicationTitle">Apply for Internship</h3>
+                        <button onclick="closeApplicationModal()" class="text-white hover:text-gray-200">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Application Form -->
+                <div class="p-6">
+                    <form id="applicationForm" class="space-y-6">
+                        <!-- Personal Information -->
+                        <div>
+                            <h4 class="text-lg font-semibold mb-4" data-en="Personal Information" data-hi="व्यक्तिगत जानकारी">Personal Information</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Full Name *" data-hi="पूरा नाम *">Full Name *</label>
+                                    <input type="text" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Email Address *" data-hi="ईमेल पता *">Email Address *</label>
+                                    <input type="email" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Phone Number *" data-hi="फोन नंबर *">Phone Number *</label>
+                                    <input type="tel" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Date of Birth *" data-hi="जन्म तिथि *">Date of Birth *</label>
+                                    <input type="date" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Educational Information -->
+                        <div>
+                            <h4 class="text-lg font-semibold mb-4" data-en="Educational Information" data-hi="शैक्षिक जानकारी">Educational Information</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Highest Qualification *" data-hi="उच्चतम योग्यता *">Highest Qualification *</label>
+                                    <select required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                        <option value="">Select Qualification</option>
+                                        <option value="bachelor">Bachelor's Degree</option>
+                                        <option value="master">Master's Degree</option>
+                                        <option value="phd">PhD</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Field of Study *" data-hi="अध्ययन का क्षेत्र *">Field of Study *</label>
+                                    <input type="text" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="University/College *" data-hi="विश्वविद्यालय/कॉलेज *">University/College *</label>
+                                    <input type="text" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="CGPA/Percentage *" data-hi="सीजीपीए/प्रतिशत *">CGPA/Percentage *</label>
+                                    <input type="text" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents -->
+                        <div>
+                            <h4 class="text-lg font-semibold mb-4" data-en="Required Documents" data-hi="आवश्यक दस्तावेज">Required Documents</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Resume/CV *" data-hi="रिज्यूम/सीवी *">Resume/CV *</label>
+                                    <input type="file" required accept=".pdf,.doc,.docx" class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                    <p class="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX format (Max 5MB)</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Academic Transcripts *" data-hi="शैक्षिक प्रमाणपत्र *">Academic Transcripts *</label>
+                                    <input type="file" required accept=".pdf" class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                    <p class="text-xs text-gray-500 mt-1">PDF format only (Max 5MB)</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Cover Letter" data-hi="कवर लेटर">Cover Letter</label>
+                                    <textarea rows="4" class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none" placeholder="Why are you interested in this internship?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Availability -->
+                        <div>
+                            <h4 class="text-lg font-semibold mb-4" data-en="Availability" data-hi="उपलब्धता">Availability</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Preferred Start Date *" data-hi="पसंदीदा प्रारंभ तिथि *">Preferred Start Date *</label>
+                                    <input type="date" required class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" data-en="Are you available immediately?" data-hi="क्या आप तुरंत उपलब्ध हैं?">Are you available immediately?</label>
+                                    <select class="w-full p-3 border border-gray-300 rounded focus:border-primary focus:outline-none">
+                                        <option value="yes">Yes, immediately</option>
+                                        <option value="2weeks">Within 2 weeks</option>
+                                        <option value="1month">Within 1 month</option>
+                                        <option value="other">Other (specify in cover letter)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex gap-4">
+                            <button type="button" onclick="closeApplicationModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded hover:bg-gray-400 transition-colors font-medium">
+                                Cancel
+                            </button>
+                            <button type="submit" class="flex-1 bg-primary text-white py-3 px-6 rounded hover:bg-primary/90 transition-colors font-medium">
+                                Submit Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div id="successNotification" class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 hidden">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-check-circle text-xl"></i>
+            <div>
+                <h4 class="font-semibold" data-en="Application Submitted!" data-hi="आवेदन जमा किया गया!">Application Submitted!</h4>
+                <p class="text-sm" data-en="We'll review your application and get back to you soon." data-hi="हम आपके आवेदन की समीक्षा करेंगे और जल्द ही आपसे संपर्क करेंगे।">We'll review your application and get back to you soon.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
