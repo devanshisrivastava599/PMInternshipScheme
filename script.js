@@ -113,7 +113,12 @@ function setupEventListeners() {
             sendMessage();
         }
     });
-    document.getElementById('mobileMenu').addEventListener('click', toggleMobileMenu);
+	//corrected
+    const mobileMenu = document.getElementById('mobileMenu');
+if (mobileMenu) {
+    mobileMenu.addEventListener('click', toggleMobileMenu);
+}
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -427,10 +432,10 @@ document.head.appendChild(style);
 // ✅ SUPABASE AUTHENTICATION CODE
 // ================================
 function initializeAuth() {
-    const SUPABASE_URL = 'https://ntmbdrdlqwxhwcibzsed.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50bWJkcmRscXd4aHdjaWJ6c2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwNzg3MjgsImV4cCI6MjA3MjY1NDcyOH0.jTCPll1xdX5EkWNnZlSqhi7B6a2rOwiOkLd9zWm';
+    const SUPABASE_URL = 'https://cqjcgokpbakongeipkzi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxamNnb2twYmFrb25nZWlwa3ppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNTQyNTgsImV4cCI6MjA3MjczMDI1OH0.4yjN-6AAj2FLRF-BerZ9JWMS9Lf2eUVJ-uWb7PwiyHs';
 
-    const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const authSection = document.getElementById('auth-section');
     const dashboardSection = document.getElementById('dashboard-section');
@@ -449,7 +454,7 @@ function initializeAuth() {
     let isLogin = true;
 
     async function handleAuthChange() {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await client.auth.getSession();
         const heroSection = document.getElementById('home');
         const mainContent = document.querySelector('main');
 
@@ -485,10 +490,10 @@ function initializeAuth() {
         const email = emailInput.value;
         const password = passwordInput.value;
         if (isLogin) {
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            const { error } = await client.auth.signInWithPassword({ email, password });
             if (error) messageDiv.textContent = error.message;
         } else {
-            const { error } = await supabase.auth.signUp({ email, password });
+            const { error } = await client.auth.signUp({ email, password });
             if (error) messageDiv.textContent = error.message;
             else messageDiv.textContent = 'Check your email for confirmation link!';
         }
@@ -510,9 +515,9 @@ function initializeAuth() {
     });
 
     authButton.addEventListener('click', async () => {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await client.auth.getSession();
         if (session) {
-            const { error } = await supabase.auth.signOut();
+            const { error } = await client.auth.signOut();
             if (error) console.error('Logout error:', error.message);
         } else {
             authSection.classList.remove('hidden');
@@ -526,14 +531,13 @@ function initializeAuth() {
     });
 
     logoutBtn.addEventListener('click', async () => {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await client.auth.signOut();
         if (error) console.error('Logout error:', error.message);
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    client.auth.onAuthStateChange((_event, session) => {
         handleAuthChange();
     });
 
     handleAuthChange();
 }
-
